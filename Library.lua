@@ -37,7 +37,7 @@ local Library = {
     RiskColor = Color3.fromRGB(255, 50, 50),
 
     Black = Color3.new(0, 0, 0);
-    Font = Enum.Font.Code,
+    Font = Enum.Font.Code, -- Temporary, will be set below
 
     OpenedFrames = {};
     DependencyBoxes = {};
@@ -45,6 +45,35 @@ local Library = {
     Signals = {};
     ScreenGui = ScreenGui;
 };
+
+-- Load font immediately (blocks until loaded)
+local function LoadFont()
+    local FontService = game:GetService("FontService")
+    
+    -- Try to load Cozette
+    local success, customFont = pcall(function()
+        local font = FontService:CreateFontFromNameAsync(
+            "Cozette",
+            Enum.FontWeight.Regular,
+            Enum.FontStyle.Normal,
+            0,
+            "https://raw.githubusercontent.com/sametexe001/luas/main/fonts/cozette-vector.ttf"
+        )
+        font:Wait()
+        return font
+    end)
+    
+    if success then
+        return customFont
+    else
+        warn("Failed to load Cozette font:", customFont)
+        return Enum.Font.Code -- Fallback
+    end
+end
+
+-- Set the font
+Library.Font = LoadFont()
+
 
 local RainbowStep = 0
 local Hue = 0
